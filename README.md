@@ -11,7 +11,7 @@
 ## Installation
 
 ```sh
-$ npm install -g express-generator
+$ npm install -g iron-generator
 ```
 
 ## Quick Start

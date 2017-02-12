@@ -135,7 +135,6 @@ function createApplication(app_name, path) {
   var app = loadTemplate('js/app.js');
   var www = loadTemplate('js/www');
   var index = loadTemplate('js/routes/index.js');
-  var users = loadTemplate('js/routes/users.js');
 
   // CSS
   var css = loadTemplate('css/style.css');
@@ -170,7 +169,6 @@ function createApplication(app_name, path) {
 
     mkdir(path + '/routes', function(){
       write(path + '/routes/index.js', index);
-      write(path + '/routes/users.js', users);
       complete();
     });
 
