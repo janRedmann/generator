@@ -10,7 +10,8 @@
     "Guillermo Rauch <rauchg@gmail.com>",
     "Jonathan Ong <me@jongleberry.com>",
     "Roman Shtylman <shtylman+expressjs@gmail.com>",
-    "Josh Alexy <jalexy12@gmail.com>"
+    "Josh Alexy <jalexy12@gmail.com>",
+    "Nizar Khalife <khalifenizar@gmail.com>"
   ],
   "keywords": [
     "express",
@@ -23,7 +24,7 @@
     "app",
     "api"
   ],
-  "repository": "expressjs/generator",
+  "repository": "jalexy12/generator",
   "license": "MIT",
   "dependencies": {
     "commander": "2.9.0",
@@ -33,7 +34,7 @@
   "main": "bin/express",
   "preferGlobal": true,
   "bin": {
-    "iron-generate": "./bin/express"
+    "irongenerate": "./bin/express"
   },
   "devDependencies": {
     "mocha": "2.5.3",
