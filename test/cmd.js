@@ -903,6 +903,99 @@ describe('express(1)', function () {
       })
     })
   })
+
+  describe('--database <engine>', function () {
+    describe('(no engine)', function () {
+      var ctx = setupTestEnvironment(this.fullTitle())
+
+      it('should exit with code 1', function (done) {
+        runRaw(ctx.dir, ['--database'], function (err, code, stdout, stderr) {
+          if (err) return done(err)
+          assert.strictEqual(code, 1)
+          done()
+        })
+      })
+
+      it('should print usage', function (done) {
+        runRaw(ctx.dir, ['--database'], function (err, code, stdout) {
+          if (err) return done(err)
+          assert.ok(/Usage: express/.test(stdout))
+          assert.ok(/--help/.test(stdout))
+          assert.ok(/--version/.test(stdout))
+          done()
+        })
+      })
+
+      it('should print argument missing', function (done) {
+        runRaw(ctx.dir, ['--database'], function (err, code, stdout, stderr) {
+          if (err) return done(err)
+          assert.ok(/error: option .* argument missing/.test(stderr))
+          done()
+        })
+      })
+    })
+
+    describe('mongoose', function () {
+      var ctx = setupTestEnvironment(this.fullTitle())
+
+      it('should create basic app with mongoose', function (done) {
+        run(ctx.dir, ['--database', 'mongoose'], function (err, stdout) {
+          if (err) return done(err)
+          ctx.files = parseCreatedFiles(stdout, ctx.dir)
+          // db projects have an extra models/ folder
+          assert.equal(ctx.files.length, fileCount + 1, 'should have ' + (fileCount + 1) + ' files')
+          done()
+        })
+      })
+
+      it('should have basic files', function () {
+        assert.notEqual(ctx.files.indexOf('bin/www'), -1, 'should have bin/www file')
+        assert.notEqual(ctx.files.indexOf('app.js'), -1, 'should have app.js file')
+        assert.notEqual(ctx.files.indexOf('package.json'), -1, 'should have package.json file')
+      })
+
+      it('should have mongoose in package dependencies', function () {
+        var file = path.resolve(ctx.dir, 'package.json')
+        var contents = fs.readFileSync(file, 'utf8')
+        var dependencies = JSON.parse(contents).dependencies
+        assert.ok(typeof dependencies.mongoose === 'string')
+      })
+
+      it('should have models/ folder', function () {
+        assert.notEqual(ctx.files.indexOf('models'), -1)
+      })
+
+      it('should have installable dependencies', function (done) {
+        this.timeout(30000)
+        npmInstall(ctx.dir, done)
+      })
+
+      it('should connect to database with mongoose from app.js', function () {
+        var file = path.resolve(ctx.dir, 'app.js')
+        var app = require(file)
+
+        var mongoosePath = path.resolve(ctx.dir, 'node_modules/mongoose')
+        var mongoose = require(mongoosePath)
+        assert.notEqual(mongoose.connection.readyState, 0)
+      })
+
+      it('should export an express app from app.js', function () {
+        var file = path.resolve(ctx.dir, 'app.js')
+        var app = require(file)
+        assert.equal(typeof app, 'function')
+        assert.equal(typeof app.handle, 'function')
+      })
+
+      it('should respond to HTTP request', function (done) {
+        var file = path.resolve(ctx.dir, 'app.js');
+        var app = require(file);
+
+        request(app)
+        .get('/')
+        .expect(200, titleRegex, done);
+      });
+    })
+  })
 });
 
 function cleanup(dir, callback) {
