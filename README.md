@@ -1,6 +1,6 @@
 [![Express Logo](https://i.cloudup.com/zfY6lL7eFa-3000x3000.png)](http://expressjs.com/)
 
-[Express'](https://www.npmjs.com/package/express) application generator.
+[Ironhack](https://www.ironhack.com)-flavored [Express](https://www.npmjs.com/package/express) application generator.
 
 
 ## Installation
@@ -11,12 +11,13 @@ $ npm install -g iron-generator
 
 ## Quick Start
 
-The quickest way to get started with express is to utilize the executable `express(1)` to generate an application as shown below:
+The quickest way to get started with express is to utilize the executable `irongenerate(1)` to generate an application as shown below:
 
 Create the app:
 
 ```bash
-$ express --view=hbs /tmp/foo && cd /tmp/foo
+$ irongenerate --view=ejs --database=mongoose --git  awesome-project/
+$ cd awesome-project/
 ```
 
 Install dependencies:

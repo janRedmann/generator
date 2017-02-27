@@ -14,7 +14,7 @@ var TEMP_DIR = path.resolve(__dirname, '..', 'temp', String(process.pid + Math.r
 var fileCount = 16
 var titleRegex = /<title>Express.*<\/title>/
 
-describe('express(1)', function () {
+describe('irongenerate(1)', function () {
   before(function (done) {
     this.timeout(30000);
     cleanup(done);
