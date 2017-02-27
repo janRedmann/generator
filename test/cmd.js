@@ -329,7 +329,7 @@ describe('irongenerate(1)', function () {
         if (err) return done(err);
         ctx.files = parseCreatedFiles(stdout, ctx.dir)
         // There's 1 less file with ejs because there's no layout file
-        assert.equal(ctx.files.length, fileCount - 1, 'should have ' + (fileCount - 1) + ' files')
+        assert.equal(ctx.files.length, fileCount, 'should have ' + fileCount + ' files')
         done();
       });
     });
@@ -343,6 +343,7 @@ describe('irongenerate(1)', function () {
     it('should have ejs templates', function () {
       assert.notEqual(ctx.files.indexOf('views/error.ejs'), -1, 'should have views/error.ejs file')
       assert.notEqual(ctx.files.indexOf('views/index.ejs'), -1, 'should have views/index.ejs file')
+      assert.notEqual(ctx.files.indexOf('views/layout.ejs'), -1, 'should have views/layout.ejs file')
     });
   });
 
@@ -543,7 +544,7 @@ describe('irongenerate(1)', function () {
           if (err) return done(err)
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
           // There's 1 less file with ejs because there's no layout file
-          assert.equal(ctx.files.length, fileCount - 1, 'should have ' + (fileCount - 1) + ' files')
+          assert.equal(ctx.files.length, fileCount, 'should have ' + fileCount + ' files')
           done()
         })
       })
@@ -557,6 +558,7 @@ describe('irongenerate(1)', function () {
       it('should have ejs templates', function () {
         assert.notEqual(ctx.files.indexOf('views/error.ejs'), -1, 'should have views/error.ejs file')
         assert.notEqual(ctx.files.indexOf('views/index.ejs'), -1, 'should have views/index.ejs file')
+        assert.notEqual(ctx.files.indexOf('views/layout.ejs'), -1, 'should have views/layout.ejs file')
       })
 
       it('should have installable dependencies', function (done) {

@@ -177,6 +177,7 @@ function createApplication(app_name, path) {
       switch (program.view) {
         case 'ejs':
           copy_template('ejs/index.ejs', path + '/views/index.ejs');
+          copy_template('ejs/layout.ejs', path + '/views/layout.ejs');
           copy_template('ejs/error.ejs', path + '/views/error.ejs');
           break;
         case 'jade':
@@ -236,6 +237,15 @@ function createApplication(app_name, path) {
 
     // Template support
     app = app.replace('{views}', program.view);
+    switch (program.view) {
+      case 'ejs':
+        app = app.replace('{viewrequire}', eol + 'const layouts      = require(\'express-ejs-layouts\');');
+        app = app.replace('{viewmiddleware}', eol + 'app.use(layouts);');
+        break;
+      default:
+        app = app.replace('{viewrequire}', '');
+        app = app.replace('{viewmiddleware}', '');
+    }
 
     // Database Engine support
     switch (program.database) {
@@ -270,6 +280,7 @@ function createApplication(app_name, path) {
         break;
       case 'ejs':
         pkg.dependencies['ejs'] = '~2.5.2';
+        pkg.dependencies['express-ejs-layouts'] = '~2.2.0';
         break;
       case 'hjs':
         pkg.dependencies['hjs'] = '~0.0.6';
