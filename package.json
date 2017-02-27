@@ -34,7 +34,7 @@
   "main": "bin/express",
   "preferGlobal": true,
   "bin": {
-    "irongenerate": "./bin/express"
+    "irongenerate": "./bin/irongenerate"
   },
   "devDependencies": {
     "mocha": "2.5.3",
