@@ -9,10 +9,12 @@ var rimraf = require('rimraf');
 var spawn = require('child_process').spawn;
 var validateNpmName = require('validate-npm-package-name')
 
-var binPath = path.resolve(__dirname, '../bin/express');
+var binPath = path.resolve(__dirname, '../bin/irongenerate');
 var TEMP_DIR = path.resolve(__dirname, '..', 'temp', String(process.pid + Math.random()))
+var fileCount = 16
+var titleRegex = /<title>Express.*<\/title>/
 
-describe('express(1)', function () {
+describe('irongenerate(1)', function () {
   before(function (done) {
     this.timeout(30000);
     cleanup(done);
@@ -32,7 +34,7 @@ describe('express(1)', function () {
         ctx.files = parseCreatedFiles(stdout, ctx.dir)
         ctx.stderr = stderr
         ctx.stdout = stdout
-        assert.equal(ctx.files.length, 17)
+        assert.equal(ctx.files.length, fileCount)
         done();
       });
     });
@@ -42,7 +44,7 @@ describe('express(1)', function () {
     })
 
     it('should provide debug instructions', function () {
-      assert.ok(/DEBUG=express\(1\)-\(no-args\):\* (?:\& )?npm start/.test(ctx.stdout))
+      assert.ok(/DEBUG=irongenerate\(1\)-\(no-args\):\* (?:\& )?npm start/.test(ctx.stdout))
     });
 
     it('should have basic files', function () {
@@ -61,20 +63,20 @@ describe('express(1)', function () {
       var file = path.resolve(ctx.dir, 'package.json');
       var contents = fs.readFileSync(file, 'utf8');
       assert.equal(contents, '{\n'
-        + '  "name": "express(1)-(no-args)",\n'
+        + '  "name": "irongenerate(1)-(no-args)",\n'
         + '  "version": "0.0.0",\n'
         + '  "private": true,\n'
         + '  "scripts": {\n'
         + '    "start": "node ./bin/www"\n'
         + '  },\n'
         + '  "dependencies": {\n'
-        + '    "body-parser": "~1.15.2",\n'
+        + '    "body-parser": "~1.16.0",\n'
         + '    "cookie-parser": "~1.4.3",\n'
-        + '    "debug": "~2.2.0",\n'
-        + '    "express": "~4.14.0",\n'
+        + '    "debug": "~2.6.0",\n'
+        + '    "express": "~4.14.1",\n'
         + '    "jade": "~1.11.0",\n'
         + '    "morgan": "~1.7.0",\n'
-        + '    "serve-favicon": "~2.3.0"\n'
+        + '    "serve-favicon": "~2.3.2"\n'
         + '  }\n'
         + '}\n');
     });
@@ -97,7 +99,7 @@ describe('express(1)', function () {
 
       request(app)
       .get('/')
-      .expect(200, /<title>Express<\/title>/, done);
+      .expect(200, titleRegex, done);
     });
 
     it('should generate a 404', function (done) {
@@ -115,7 +117,7 @@ describe('express(1)', function () {
       it('should create basic app', function (done) {
         run(ctx.dir, [], function (err, output) {
           if (err) return done(err)
-          assert.equal(parseCreatedFiles(output, ctx.dir).length, 17)
+          assert.equal(parseCreatedFiles(output, ctx.dir).length, fileCount)
           done()
         })
       })
@@ -135,7 +137,7 @@ describe('express(1)', function () {
       it('should create basic app', function (done) {
         run(ctx.dir, [], function (err, output) {
           if (err) return done(err)
-          assert.equal(parseCreatedFiles(output, ctx.dir).length, 17)
+          assert.equal(parseCreatedFiles(output, ctx.dir).length, fileCount)
           done()
         })
       })
@@ -164,7 +166,7 @@ describe('express(1)', function () {
     it('should print usage', function (done) {
       runRaw(ctx.dir, ['--foo'], function (err, code, stdout, stderr) {
         if (err) return done(err);
-        assert.ok(/Usage: express/.test(stdout));
+        assert.ok(/Usage: irongenerate/.test(stdout));
         assert.ok(/--help/.test(stdout));
         assert.ok(/--version/.test(stdout));
         assert.ok(/error: unknown option/.test(stderr));
@@ -196,7 +198,7 @@ describe('express(1)', function () {
       it('should print usage', function (done) {
         runRaw(ctx.dir, ['--css'], function (err, code, stdout) {
           if (err) return done(err);
-          assert.ok(/Usage: express/.test(stdout));
+          assert.ok(/Usage: irongenerate/.test(stdout));
           assert.ok(/--help/.test(stdout));
           assert.ok(/--version/.test(stdout));
           done();
@@ -219,7 +221,7 @@ describe('express(1)', function () {
         run(ctx.dir, ['--css', 'less'], function (err, stdout) {
           if (err) return done(err);
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 17, 'should have 17 files')
+          assert.equal(ctx.files.length, fileCount, 'should have ' + fileCount + ' files')
           done();
         });
       });
@@ -252,7 +254,7 @@ describe('express(1)', function () {
 
         request(app)
         .get('/')
-        .expect(200, /<title>Express<\/title>/, done);
+        .expect(200, titleRegex, done);
       });
 
       it('should respond with stylesheet', function (done) {
@@ -272,7 +274,7 @@ describe('express(1)', function () {
         run(ctx.dir, ['--css', 'stylus'], function (err, stdout) {
           if (err) return done(err);
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 17, 'should have 17 files')
+          assert.equal(ctx.files.length, fileCount, 'should have ' + fileCount + ' files')
           done();
         });
       });
@@ -305,7 +307,7 @@ describe('express(1)', function () {
 
         request(app)
         .get('/')
-        .expect(200, /<title>Express<\/title>/, done);
+        .expect(200, titleRegex, done);
       });
 
       it('should respond with stylesheet', function (done) {
@@ -326,7 +328,8 @@ describe('express(1)', function () {
       run(ctx.dir, ['--ejs'], function (err, stdout) {
         if (err) return done(err);
         ctx.files = parseCreatedFiles(stdout, ctx.dir)
-        assert.equal(ctx.files.length, 16, 'should have 16 files')
+        // There's 1 less file with ejs because there's no layout file
+        assert.equal(ctx.files.length, fileCount, 'should have ' + fileCount + ' files')
         done();
       });
     });
@@ -340,6 +343,7 @@ describe('express(1)', function () {
     it('should have ejs templates', function () {
       assert.notEqual(ctx.files.indexOf('views/error.ejs'), -1, 'should have views/error.ejs file')
       assert.notEqual(ctx.files.indexOf('views/index.ejs'), -1, 'should have views/index.ejs file')
+      assert.notEqual(ctx.files.indexOf('views/layout.ejs'), -1, 'should have views/layout.ejs file')
     });
   });
 
@@ -350,7 +354,8 @@ describe('express(1)', function () {
       run(ctx.dir, ['--git'], function (err, stdout) {
         if (err) return done(err);
         ctx.files = parseCreatedFiles(stdout, ctx.dir)
-        assert.equal(ctx.files.length, 18, 'should have 18 files')
+        // 1 extra file - .gitignore
+        assert.equal(ctx.files.length, fileCount + 1, 'should have ' + (fileCount + 1) + ' files')
         done();
       });
     });
@@ -380,7 +385,7 @@ describe('express(1)', function () {
         if (err) return done(err);
         var files = parseCreatedFiles(stdout, ctx.dir);
         assert.equal(files.length, 0);
-        assert.ok(/Usage: express/.test(stdout));
+        assert.ok(/Usage: irongenerate/.test(stdout));
         assert.ok(/--help/.test(stdout));
         assert.ok(/--version/.test(stdout));
         done();
@@ -395,7 +400,7 @@ describe('express(1)', function () {
       run(ctx.dir, ['--hbs'], function (err, stdout) {
         if (err) return done(err);
         ctx.files = parseCreatedFiles(stdout, ctx.dir);
-        assert.equal(ctx.files.length, 17);
+        assert.equal(ctx.files.length, fileCount);
         done();
       });
     });
@@ -428,7 +433,7 @@ describe('express(1)', function () {
         if (err) return done(err);
         var files = parseCreatedFiles(stdout, ctx.dir);
         assert.equal(files.length, 0);
-        assert.ok(/Usage: express/.test(stdout));
+        assert.ok(/Usage: irongenerate/.test(stdout));
         assert.ok(/--help/.test(stdout));
         assert.ok(/--version/.test(stdout));
         done();
@@ -443,7 +448,8 @@ describe('express(1)', function () {
       run(ctx.dir, ['--hogan'], function (err, stdout) {
         if (err) return done(err)
         ctx.files = parseCreatedFiles(stdout, ctx.dir)
-        assert.equal(ctx.files.length, 16)
+        // There's 1 less file with Hogan because there's no layout file
+        assert.equal(ctx.files.length, fileCount - 1)
         done()
       })
     })
@@ -474,7 +480,7 @@ describe('express(1)', function () {
       run(ctx.dir, ['--pug'], function (err, stdout) {
         if (err) return done(err)
         ctx.files = parseCreatedFiles(stdout, ctx.dir)
-        assert.equal(ctx.files.length, 17)
+        assert.equal(ctx.files.length, fileCount)
         done()
       })
     })
@@ -514,7 +520,7 @@ describe('express(1)', function () {
       it('should print usage', function (done) {
         runRaw(ctx.dir, ['--view'], function (err, code, stdout) {
           if (err) return done(err)
-          assert.ok(/Usage: express/.test(stdout))
+          assert.ok(/Usage: irongenerate/.test(stdout))
           assert.ok(/--help/.test(stdout))
           assert.ok(/--version/.test(stdout))
           done()
@@ -537,7 +543,8 @@ describe('express(1)', function () {
         run(ctx.dir, ['--view', 'ejs'], function (err, stdout) {
           if (err) return done(err)
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 16, 'should have 16 files')
+          // There's 1 less file with ejs because there's no layout file
+          assert.equal(ctx.files.length, fileCount, 'should have ' + fileCount + ' files')
           done()
         })
       })
@@ -551,6 +558,7 @@ describe('express(1)', function () {
       it('should have ejs templates', function () {
         assert.notEqual(ctx.files.indexOf('views/error.ejs'), -1, 'should have views/error.ejs file')
         assert.notEqual(ctx.files.indexOf('views/index.ejs'), -1, 'should have views/index.ejs file')
+        assert.notEqual(ctx.files.indexOf('views/layout.ejs'), -1, 'should have views/layout.ejs file')
       })
 
       it('should have installable dependencies', function (done) {
@@ -571,7 +579,7 @@ describe('express(1)', function () {
 
         request(app)
         .get('/')
-        .expect(200, /<title>Express<\/title>/, done)
+        .expect(200, titleRegex, done)
       })
 
       it('should generate a 404', function (done) {
@@ -591,7 +599,7 @@ describe('express(1)', function () {
         run(ctx.dir, ['--view', 'hbs'], function (err, stdout) {
           if (err) return done(err)
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 17)
+          assert.equal(ctx.files.length, fileCount)
           done()
         })
       })
@@ -633,7 +641,7 @@ describe('express(1)', function () {
 
         request(app)
         .get('/')
-        .expect(200, /<title>Express<\/title>/, done)
+        .expect(200, titleRegex, done)
       })
 
       it('should generate a 404', function (done) {
@@ -653,7 +661,8 @@ describe('express(1)', function () {
         run(ctx.dir, ['--view', 'hjs'], function (err, stdout) {
           if (err) return done(err)
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 16)
+          // There's 1 less file with Hogan because there's no layout file
+          assert.equal(ctx.files.length, fileCount - 1)
           done()
         })
       })
@@ -697,7 +706,7 @@ describe('express(1)', function () {
 
         request(app)
         .get('/')
-        .expect(200, /<title>Express<\/title>/, done)
+        .expect(200, titleRegex, done)
       })
 
       it('should generate a 404', function (done) {
@@ -717,7 +726,7 @@ describe('express(1)', function () {
         run(ctx.dir, ['--view', 'pug'], function (err, stdout) {
           if (err) return done(err)
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 17)
+          assert.equal(ctx.files.length, fileCount)
           done()
         })
       })
@@ -759,7 +768,7 @@ describe('express(1)', function () {
 
         request(app)
         .get('/')
-        .expect(200, /<title>Express<\/title>/, done)
+        .expect(200, titleRegex, done)
       })
 
       it('should generate a 404', function (done) {
@@ -779,7 +788,7 @@ describe('express(1)', function () {
         run(ctx.dir, ['--view', 'twig'], function (err, stdout) {
           if (err) return done(err)
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 17)
+          assert.equal(ctx.files.length, fileCount)
           done()
         })
       })
@@ -821,7 +830,7 @@ describe('express(1)', function () {
 
         request(app)
         .get('/')
-        .expect(200, /<title>Express<\/title>/, done)
+        .expect(200, titleRegex, done)
       })
 
       it('should generate a 404', function (done) {
@@ -841,7 +850,7 @@ describe('express(1)', function () {
         run(ctx.dir, ['--view', 'vash'], function (err, stdout) {
           if (err) return done(err)
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 17)
+          assert.equal(ctx.files.length, fileCount)
           done()
         })
       })
@@ -883,7 +892,7 @@ describe('express(1)', function () {
 
         request(app)
         .get('/')
-        .expect(200, /<title>Express<\/title>/, done)
+        .expect(200, titleRegex, done)
       })
 
       it('should generate a 404', function (done) {
@@ -894,6 +903,99 @@ describe('express(1)', function () {
         .get('/does_not_exist')
         .expect(404, /<h1>Not Found<\/h1>/, done)
       })
+    })
+  })
+
+  describe('--database <engine>', function () {
+    describe('(no engine)', function () {
+      var ctx = setupTestEnvironment(this.fullTitle())
+
+      it('should exit with code 1', function (done) {
+        runRaw(ctx.dir, ['--database'], function (err, code, stdout, stderr) {
+          if (err) return done(err)
+          assert.strictEqual(code, 1)
+          done()
+        })
+      })
+
+      it('should print usage', function (done) {
+        runRaw(ctx.dir, ['--database'], function (err, code, stdout) {
+          if (err) return done(err)
+          assert.ok(/Usage: irongenerate/.test(stdout))
+          assert.ok(/--help/.test(stdout))
+          assert.ok(/--version/.test(stdout))
+          done()
+        })
+      })
+
+      it('should print argument missing', function (done) {
+        runRaw(ctx.dir, ['--database'], function (err, code, stdout, stderr) {
+          if (err) return done(err)
+          assert.ok(/error: option .* argument missing/.test(stderr))
+          done()
+        })
+      })
+    })
+
+    describe('mongoose', function () {
+      var ctx = setupTestEnvironment(this.fullTitle())
+
+      it('should create basic app with mongoose', function (done) {
+        run(ctx.dir, ['--database', 'mongoose'], function (err, stdout) {
+          if (err) return done(err)
+          ctx.files = parseCreatedFiles(stdout, ctx.dir)
+          // db projects have an extra models/ folder
+          assert.equal(ctx.files.length, fileCount + 1, 'should have ' + (fileCount + 1) + ' files')
+          done()
+        })
+      })
+
+      it('should have basic files', function () {
+        assert.notEqual(ctx.files.indexOf('bin/www'), -1, 'should have bin/www file')
+        assert.notEqual(ctx.files.indexOf('app.js'), -1, 'should have app.js file')
+        assert.notEqual(ctx.files.indexOf('package.json'), -1, 'should have package.json file')
+      })
+
+      it('should have mongoose in package dependencies', function () {
+        var file = path.resolve(ctx.dir, 'package.json')
+        var contents = fs.readFileSync(file, 'utf8')
+        var dependencies = JSON.parse(contents).dependencies
+        assert.ok(typeof dependencies.mongoose === 'string')
+      })
+
+      it('should have models/ folder', function () {
+        assert.notEqual(ctx.files.indexOf('models'), -1)
+      })
+
+      it('should have installable dependencies', function (done) {
+        this.timeout(30000)
+        npmInstall(ctx.dir, done)
+      })
+
+      it('should connect to database with mongoose from app.js', function () {
+        var file = path.resolve(ctx.dir, 'app.js')
+        var app = require(file)
+
+        var mongoosePath = path.resolve(ctx.dir, 'node_modules/mongoose')
+        var mongoose = require(mongoosePath)
+        assert.notEqual(mongoose.connection.readyState, 0)
+      })
+
+      it('should export an express app from app.js', function () {
+        var file = path.resolve(ctx.dir, 'app.js')
+        var app = require(file)
+        assert.equal(typeof app, 'function')
+        assert.equal(typeof app.handle, 'function')
+      })
+
+      it('should respond to HTTP request', function (done) {
+        var file = path.resolve(ctx.dir, 'app.js');
+        var app = require(file);
+
+        request(app)
+        .get('/')
+        .expect(200, titleRegex, done);
+      });
     })
   })
 });

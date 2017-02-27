@@ -1,6 +1,6 @@
 [![Express Logo](https://i.cloudup.com/zfY6lL7eFa-3000x3000.png)](http://expressjs.com/)
 
-[Express'](https://www.npmjs.com/package/express) application generator.
+[Ironhack](https://www.ironhack.com)-flavored [Express](https://www.npmjs.com/package/express) application generator.
 
 
 ## Installation
@@ -11,12 +11,13 @@ $ npm install -g iron-generator
 
 ## Quick Start
 
-The quickest way to get started with express is to utilize the executable `express(1)` to generate an application as shown below:
+The quickest way to get started with express is to utilize the executable `irongenerate(1)` to generate an application as shown below:
 
 Create the app:
 
 ```bash
-$ iron-generate --ejs --git
+$ irongenerate --view=ejs --database=mongoose --git  awesome-project/
+$ cd awesome-project/
 ```
 
 Install dependencies:
@@ -35,16 +36,17 @@ $ npm start
 
 This generator can also be further configured with the following command line flags.
 
-    -h, --help          output usage information
-        --version       output the version number
-    -e, --ejs           add ejs engine support
-        --hbs           add handlebars engine support
-        --pug           add pug engine support
-    -H, --hogan         add hogan.js engine support
-    -v, --view <engine> add view <engine> support (ejs|hbs|hjs|jade|pug|twig|vash) (defaults to jade)
-    -c, --css <engine>  add stylesheet <engine> support (less|stylus|compass|sass) (defaults to plain css)
-        --git           add .gitignore
-    -f, --force         force on non-empty directory
+    -h, --help              output usage information
+        --version           output the version number
+    -e, --ejs               add ejs engine support
+        --hbs               add handlebars engine support
+        --pug               add pug engine support
+    -H, --hogan             add hogan.js engine support
+    -v, --view <engine>     add view <engine> support (ejs|hbs|hjs|jade|pug|twig|vash) (defaults to jade)
+    -c, --css <engine>      add stylesheet <engine> support (less|stylus|compass|sass) (defaults to plain css)
+    -d, --database <engine> add <engine> database support (mongoose) (defaults to none)
+        --git               add .gitignore
+    -f, --force             force on non-empty directory
 
 ## License
 
