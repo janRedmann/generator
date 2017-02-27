@@ -70,13 +70,13 @@ describe('irongenerate(1)', function () {
         + '    "start": "node ./bin/www"\n'
         + '  },\n'
         + '  "dependencies": {\n'
-        + '    "body-parser": "~1.15.2",\n'
+        + '    "body-parser": "~1.16.0",\n'
         + '    "cookie-parser": "~1.4.3",\n'
-        + '    "debug": "~2.2.0",\n'
-        + '    "express": "~4.14.0",\n'
+        + '    "debug": "~2.6.0",\n'
+        + '    "express": "~4.14.1",\n'
         + '    "jade": "~1.11.0",\n'
         + '    "morgan": "~1.7.0",\n'
-        + '    "serve-favicon": "~2.3.0"\n'
+        + '    "serve-favicon": "~2.3.2"\n'
         + '  }\n'
         + '}\n');
     });

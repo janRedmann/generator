@@ -265,12 +265,12 @@ function createApplication(app_name, path) {
       , private: true
       , scripts: { start: 'node ./bin/www' }
       , dependencies: {
-          'express': '~4.14.0',
-          'body-parser': '~1.15.2',
+          'express': '~4.14.1',
+          'body-parser': '~1.16.0',
           'cookie-parser': '~1.4.3',
-          'debug': '~2.2.0',
+          'debug': '~2.6.0',
           'morgan': '~1.7.0',
-          'serve-favicon': '~2.3.0'
+          'serve-favicon': '~2.3.2'
       }
     }
 
@@ -279,7 +279,7 @@ function createApplication(app_name, path) {
         pkg.dependencies['jade'] = '~1.11.0';
         break;
       case 'ejs':
-        pkg.dependencies['ejs'] = '~2.5.2';
+        pkg.dependencies['ejs'] = '~2.5.5';
         pkg.dependencies['express-ejs-layouts'] = '~2.2.0';
         break;
       case 'hjs':
@@ -289,10 +289,10 @@ function createApplication(app_name, path) {
         pkg.dependencies['hbs'] = '~4.0.1';
         break;
       case 'pug':
-        pkg.dependencies['pug'] = '~2.0.0-beta6';
+        pkg.dependencies['pug'] = '~2.0.0-beta10';
         break;
       case 'twig':
-        pkg.dependencies['twig'] = '~0.9.5';
+        pkg.dependencies['twig'] = '~0.10.3';
         break;
       case 'vash':
         pkg.dependencies['vash'] = '~0.12.2';
