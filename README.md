@@ -47,6 +47,7 @@ This generator can also be further configured with the following command line fl
     -d, --database <engine> add <engine> database support (mongoose) (defaults to none)
         --git               add .gitignore
     -f, --force             force on non-empty directory
+        --auth              add passport auth scaffolding
 
 ## License
 
